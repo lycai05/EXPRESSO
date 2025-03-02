@@ -1,4 +1,4 @@
-# EXPRESSO
+# Introduction
 
 The human genome exhibits a complex hierarchical 3D organization. Utilizing genome-wide 3D genome mapping technologies such as Hi-C, HiChIP, and ChIA-PET, the spatial structure of the 3D genome can be parsed and visualized at multiple levels, including megabase-scale A/B compartments, submegabase-scale topologically associated domains (TADs), stripes, and kilobase-scale chromatin loops. 
 
@@ -11,84 +11,52 @@ Here, we present **EXPRESSO (Exploration of Regulatory Epigenome with Spatial an
 ---
 
 ## Contents
-1. [Introduction](#introduction)
-2. [Datasets](#datasets)
-3. [Search Samples](#search-samples)
-4. [Search Genes](#search-genes)
-5. [Multi-omics Analysis](#multi-omics-analysis)
-   - [Gene Compartment and Expression](#gene-compartment-and-expression)
-   - [Stripe Atlas](#stripe-atlas)
-   - [Chromatin Loop Enriched Transcription Factors](#chromatin-loop-enriched-transcription-factors)
-6. [Download](#download)
-7. [API](#api)
-
----
-
-## Introduction
-
-EXPRESSO is designed to support researchers in the exploration and analysis of multi-omics
- data. 
-Key features of EXPRESSO include: 
-
-1. Collection of 1094 3D genomic datasets (Hi-C, ChIA-PET, HiChIP) from public repositories, and 1246 1D datasets (RNA-seq, CTCF/H3K27ac/H3K27me3 ChIP-seq, and ATAC-seq) from the same studies that generated the 3D genomic datasets. 
-
-2. Uniform processing of all datasets, with various 3D genomic features (contact matrix, compartments, contact domains, stripes, chromatin loops) available to the community. 
-
-3. Development of multi-omics analyses applications, including: 
-
-- a. Investigating the associations between compartment switches and gene expression variations. 
-
-- b. Assessing the characteristics of active and repressed stripes. 
-
-- c. Identifying transcription factors that mediate chromatin loops. 
-
-4. Interactive visualization of all 3D genomic features using an in-house genome browser. 
-
-5. Development of a REST API to allow programmatic access to most functionalities, in addition to interactive data exploration on the website.  
-
+- [Datasets](#datasets)
+- [Search Samples](#search-samples)
+  - [Autocomplete search](#autocomplete-search) 
+  - [Individual sample page](#individual-sample-page)
+  - [Genome Browser](#genome-browser)
+  - [File Table](#file-table)
+    - [Compartments Table](#compartments-table)
+    - [Contact Domain Table](#contact-domain-table)
+    - [Stripe Table](#stripe-table)
+    - [Chromatin Loop Table](#chromatin-loop-table)
+- [Search Genes](#search-genes)
+- [APIs](#apis)
+- [Download](#download)
 ---
 
 ## Datasets
 
-The datasets distribution by tissue, data types, biomaterial types and source health status are plotted below.
+EXPRESSO collects 1360 3D genomic datasets (Hi-C, ChIA-PET, HiChIP) from public repositories (by 2024 Oct)
 ![](./assets/images/sample_distribution.png)
 
 ---
 
-## Navigation Menu
-![](./assets/images/menu.png)
-You can navigate through the **EXPRESSO** platform using various menus to access specific functionalities:
+## Search Samples
 
-- **Data Portal**: Search for individual samples based on various criteria. [Search in Data Portal](#data-portal)
-- **Gene Search**: Look up individual genes to view detailed information and analytics. [Search Genes](#gene-search)
-- **Multi-Omics Analysis**: Perform comprehensive multi-omics analyses online with our integrated tools. [Conduct Multi-Omics Analysis](#multi-omics-analysis)
-- **Download**: Access and download individual files or compiled datasets as per your requirements. [Download Files](#download)
-- **API**: Interact programmatically with our database using the API for automated data retrieval and integration. [Use API](#api)
-
-
-## Data Portal
-
-The "Sumamry Table" allows users to query the database for specific samples based on various criteria such as tissue type, disease state, or experimental conditions. Click the **View** column to access a dedicated page of a specific sample.
+The "Summary Table" in the Data Portal allows users to query the database for specific samples based on various criteria such as tissue type, disease state, or experimental conditions. Click the **View** column to access a dedicated page of a specific sample.
 ![](./assets/images/sample_table.png)
 
-## Individual sample page
+#### Autocomplete search
+Users can also search directly via sample names
+![](./assets/images/autocomplete_biosamples.png)
 
+#### Individual sample page
 Each individual sample page consists of four parts: Sample Information, File Download, Genome Browser and File Table.
 Sample Information is for basic sample information 
-File Download is the download link for contact matrix, A/B compartments, contact domains, stripes and chromatin loops.
+File Download is the download link for A/B compartments, contact domains, stripes and chromatin loops.
 
 ![](./assets/images/sample_info.png)
 ---
 
-## Genome Browser
+#### Genome Browser
 
 We developed an in-house genome browser to visualize different 3D genomic structures such as compartment, contact domains, chromatin loops, stripes, etc.
-
-
 ![](./assets/images/genome_browser.png)
 
-## File Table
-### 1. Compartments Table
+#### File Table
+###### 1. Compartments Table
 This table categorizes genes based on the A/B compartments of the genome, including a quantitative measure of compartment strength:
 - **gene**: Gene identifier
 - **compartment**: Indicates whether the gene is in an A or B compartment
@@ -96,13 +64,13 @@ This table categorizes genes based on the A/B compartments of the genome, includ
 
 ![](./assets/images/compartment_table.png)
 
-### 2. Contact Domain Table
+###### 2. Contact Domain Table
 This table outlines the boundaries of contact domains related to specific genes:
 - **gene**: Gene identifier
 - **contact domain boundary**: Whether it's boundary or domain gene
 ![](./assets/images/domain_table.png)
 
-### 3. Stripe Table
+###### 3. Stripe Table
 Details about observed stripes in Hi-C maps
 - **chrom1**: Chromosome
 - **pos1**: Start position of the stripe on chrom1
@@ -115,7 +83,7 @@ Details about observed stripes in Hi-C maps
 - **gene_annotation_2**: Annotation of the second anchor
 ![](./assets/images/stripe_table.png)
 
-### 4. Chromatin Loop Table
+###### 4. Chromatin Loop Table
 This table provides detailed information on chromatin loops, highlighting the interaction between two anchors:
 - **chrom1**: Chromosome of the first anchor
 - **start1**: Start position of the first anchor
@@ -136,35 +104,262 @@ Users can search for genes of interest using identifiers like gene names, symbol
 
 ---
 
-## Multi-omics Analysis
+## APIs
 
-### Gene Compartment and Expression
+The EXPRESSO API enables programmatic access to all functionalities of the platform, allowing developers to integrate EXPRESSO's capabilities into their own applications or workflows.
 
-This section focuses on the analysis of gene expression within different cellular compartments, providing insights into the functional dynamics of genes in various cellular contexts.
+| Type | Required resource | API endpoint urls |
+|------|------------------|-------------------|
+| Search metadata | | |
+| Sample | | `/dataset/{gsm_id}` |
+| Samples | | `/datasets/tissue={string}&heatlth_status={string}&biomaterial={string}` |
+| Files | | `/files/{sample_name}` |
+| Seach genomic features | | |
+| Compartments | | `/compartments?sample_name={sample_name}` |
+| Domains | | `/domains?sample_name={sample_name}` |
+| Stripes | | `/stripes?sample_name={sample_name}` |
+| Loops | | `/loops?sample_name={sample_name}` |
+| Search gene associated genomic features | | |
+| Compartments | | `/gene/{gene_name}/compartment` |
+| Domains | | `/gene/{gene_name}/domain` |
+| Stripes | | `/stripes?gene_id={gene_id}` |
+| Loops | | `/loops?gene_id={gene_id}` |
+| Download | | |
+| File | | `/download/{sample_name}/{file_type}` |
 
-### Stripe Atlas
 
-The Stripe Atlas visualizes gene expression across different tissues and developmental stages, offering a stripe-based graphical representation that highlights tissue-specific gene activity.
+#### Search a specific library by id
 
-### Chromatin Loop Enriched Transcription Factors
+`GET` `/dataset/{gsm_id}`
 
-This analysis tool identifies transcription factors that are likely to be enriched in specific chromatin loops, facilitating the understanding of transcriptional regulation through 3D chromatin structure.
+###### Example 1: Search dataset GSM4072698
+
+###### Request
+```
+https://expresso.sustech.edu.cn/api/sample/GSM4072698
+```
+
+###### Response
+```json
+{
+    "id": "GSM4072698",
+    "data_source": "GEO",
+    "data_type": "in-situ Hi-C",
+    "tissue": "Colon",
+    "health_status": "Cancer",
+    "biomaterial_type": "Tissue", 
+    "enzyme_linker": "MboI",
+    "factor": "NA",
+    "cell_line_name": "NA"
+}
+```
+
+#### Search datasets by one or multiple conditions
+
+`GET` `/datasets/tissue={string}&health_status={string}&biomaterial={string}`
+
+###### Example 1: Search all datasets from cancer
+
+###### Request
+```
+https://expresso.sustech.edu.cn/api/samples?health_status=cancer&limit=10&offset=1
+```
+
+###### Response
+```json
+[
+{
+    "id": "GSM5369938",
+    "data_source": "ENCODE",
+    "data_type": "ChIA-PET",
+    "tissue": "Colon",
+    "health_status": "Cancer",
+    "biomaterial_type": "Cell Line",
+    "enzyme_linker": "ACGGAATCTTAATCTGACT",
+    "factor": "RNAPII",
+    "cell_line_name": "HCT116"
+},
+{
+    "id": "GSM5369939",
+    "data_source": "ENCODE",
+    "data_type": "ChIA-PET",
+    "tissue": "Colon"
+}
+]
+```
+
+###### Example 2: Search all datasets from liver or heart
+
+###### Request
+```
+/datasets/tissue=liver,heart
+```
+
+###### Response
+```json
+{
+    gsm_id: '',
+    health_status: ''
+}
+```
+
+###### Example 3: Search all cancer datasets from heart and biomaterials are from tissue
+
+###### Request
+```
+/datasets/tissue=heart&health_status=cancer&biomaterial=tissue
+```
+
+###### Response
+```json
+{
+    gsm_id: '',
+    health_status: ''
+}
+```
+
+#### Search Compartments E1 score of samples
+
+`GET` `/compartments?sample_name={sample_name}`
+
+###### Example 1: Search Compartments E1 score of sample GSM2109214
+
+###### Request
+```
+https://expresso.sustech.edu.cn/api/compartments?sample_name=GSM2109214
+```
+
+###### Response
+```json
+{
+    "itemCount": 57135,
+    "items": [
+        {
+            "sample_name": "GSM2109214",
+            "gene_id": "SOX2P2",
+            "value": 0.2084
+        },
+        {
+            "sample_name": "GSM2109214",
+            "gene_id": "FTBDI",
+            "value": 0.4628
+        },
+        {
+            "sample_name": "GSM2109214",
+            "gene_id": "MARGS",
+            "value": 0.493
+        }
+    ]
+}
+```
+
+#### Search contact domains from samples
+
+`GET` `/domains?sample_name={sample_name}`
+
+###### Example 1: Search Boundary and domain genes of sample GSM4072698
+
+###### Request
+```
+https://expresso.sustech.edu.cn/api/domains?sample_name=GSM4072698
+```
+
+###### Response
+```json
+{
+    "itemCount": 54718,
+    "items": [
+        {
+            "sample_name": "GSM4072698",
+            "gene_id": "PERM1",
+            "value": "D"
+        },
+        {
+            "sample_name": "GSM4072698",
+            "gene_id": "AL031282.2",
+            "value": "D"
+        },
+        {
+            "sample_name": "GSM4072698",
+            "gene_id": "SUB35E2A",
+            "value": "D"
+        }
+    ]
+}
+```
+
+#### Search Stripes from samples
+
+`GET` `/stripes?sample_name={sample_name}`
+
+###### Example 1: Search Stripes of sample GSM2109214
+
+###### Request
+```
+https://expresso.sustech.edu.cn/api/stripes?sample_name=GSM2109214
+```
+
+###### Response
+```json
+{
+    "itemCount": 124806S,
+    "items": [
+        {
+            "chrom1": "chr16",
+            "pos1": 34570001,
+            "pos2": 34595000,
+            "chrom2": "chr16",
+            "pos3": 34570001,
+            "pos4": 34490000,
+            "id": "ENCFF02IVUU",
+            "pvalue": 0.001,
+            "gene_anno_1": "NA",
+            "gene_anno_2": "AC018558.1,AC018558.2,AC018558.3,AC018558.6,AC018558.5,AC023824.1,AC023824.2",
+            "h3k27ac_1": "NA",
+            "h3k27me3_1": "NA",
+            "h3k27me3_2": "NA",
+            "ctcf_1": "NA"
+        }
+    ]
+}
+```
+
+#### Search Chromatin loops from samples
+
+`GET` `/loops?sample_name={sample_name}`
+
+###### Example 1: Search Chromatin loops from sample GSM4072698
+
+###### Request
+```
+https://expresso.sustech.edu.cn/api/loops?sample_name=GSM4072698
+```
+
+###### Response
+```json
+{
+    "itemCount": 3145,
+    "items": [
+        {
+            "chrom1": "chr1",
+            "start1": 11752000,
+            "end1": 11753000,
+            "chrom2": "chr1",
+            "start2": 11753000,
+            "end2": 11790000,
+            "sample_name": "GSM4072698",
+            "count": 23.0,
+            "gene_anno_1": "NA",
+            "gene_anno_2": "NA"
+        }
+    ]
+}
+```
 
 ---
 
-## Download
+We would love to hear your suggestions. Please ask your questions in the issue page, and we will respond as soon as possible.
 
-EXPRESSO provides downloadable content, including raw data files, processed results, and customizable reports, to support offline analysis and integration into other research projects.
-
----
-
-## API
-
-The EXPRESSO API enables programmatic access to all functionalities of the platform, allowing developers to integrate EXPRESSO's capabilities into their own applications or workflows. Detailed documentation is available to facilitate API usage.
-
----
-
-For more information, please refer to the detailed documentation or contact our support team.
 
 ---
 
